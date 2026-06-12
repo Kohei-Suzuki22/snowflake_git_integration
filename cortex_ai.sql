@@ -105,14 +105,21 @@ FROM product_reviews
 ORDER BY sentiment_score DESC;
 
 
+  精度を上げた版
+
   SELECT
     review_id,
     review_text,
     AI_CLASSIFY(
       review_text,
-      ['配送', '品質', '価格']
+      [
+        {'label': '配送', 'description': '配送速度・梱包・到着状態など物流に関する内容'},
+        {'label': '品質', 'description': '商品自体の品質・使い勝手・耐久性・故障など'},
+        {'label': '価格', 'description': '値段・コスパ・割高/割安などお金に関する内容'}
+      ],
+      {'task_description': 'ECサイトのレビュー本文を、最も主要な観点で 3 カテゴリに分類する'}
     ):labels[0]::STRING AS category
   FROM product_reviews;
-
+  
 
 DROP TABLE product_reviews;
